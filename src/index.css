@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cyber-bg: #020617;
+  --color-cyber-card: #0f172a;
+  --color-cyber-blue: #38bdf8;
+  --color-cyber-green: #4ade80;
+  --color-cyber-red: #f43f5e;
+  --color-cyber-yellow: #f59e0b;
+  --color-cyber-border: #1e293b;
+  --color-cyber-text-main: #f8fafc;
+  --color-cyber-text-muted: #94a3b8;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-cyber-bg text-cyber-text-main font-sans antialiased;
+  }
+}
+
+@layer components {
+  .cyber-panel {
+    @apply bg-cyber-card border border-cyber-border rounded-sm transition-all hover:border-cyber-blue/20 shadow-sm relative overflow-hidden;
+  }
+
+  .cyber-panel-header {
+    @apply px-4 py-2 border-b border-cyber-border text-[10px] uppercase tracking-widest text-cyber-text-muted font-bold flex justify-between items-center bg-white/5;
+  }
+
+  .cyber-button-primary {
+    @apply bg-cyber-blue text-black font-bold py-2 px-6 rounded-sm transition-all hover:bg-cyber-blue/80 active:scale-95 flex items-center gap-2 text-xs uppercase tracking-wider;
+  }
+
+  .cyber-input {
+    @apply bg-cyber-bg border border-cyber-border rounded-sm px-4 py-2 outline-none focus:border-cyber-blue/40 transition-all text-white text-sm;
+  }
+
+  .stat-card-indicator {
+    @apply absolute left-0 top-0 w-[2px] h-full bg-cyber-blue;
+  }
+
+  .stat-card-indicator-alert {
+    @apply bg-cyber-red;
+  }
+
+  .status-tag {
+    @apply px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-tighter;
+  }
+
+  .tag-online {
+    @apply bg-cyber-green/10 text-cyber-green border-cyber-green/30;
+  }
+
+  .tag-threat {
+    @apply bg-cyber-red/10 text-cyber-red border-cyber-red/30;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+}
+
+.glitch-text {
+  text-shadow: 1px 0 var(--color-cyber-red), -1px 0 var(--color-cyber-blue);
+  letter-spacing: -0.02em;
+}
+
+.blink-alert {
+  animation: cyber-blink 1.5s infinite;
+}
+
+@keyframes cyber-blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--color-cyber-red); }
+  50% { opacity: 0.5; box-shadow: 0 0 1px var(--color-cyber-red); }
+}
+
+.scanline {
+  width: 100%;
+  height: 40px;
+  z-index: 50;
+  background: linear-gradient(0deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.03) 50%, rgba(56, 189, 248, 0) 100%);
+  position: absolute;
+  top: -100px;
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% { top: -100px; }
+  100% { top: 100%; }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-cyber-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-cyber-border rounded-none hover:bg-cyber-blue/30;
+}

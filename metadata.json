@@ -1,0 +1,6 @@
+{
+  "name": "CSG Network Inventory Management",
+  "description": "Enterprise-grade cyber-defense dashboard for managing network systems and inventory with real-time monitoring and threat detection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

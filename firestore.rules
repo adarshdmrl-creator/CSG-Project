@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global catch-all default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isStringWithMax(val, max) {
+      return val is string && val.size() <= max;
+    }
+
+    // Device validation
+    function isValidDevice(data) {
+      return (!('id' in data) || data.id is string)
+        && isStringWithMax(data.hostname, 100)
+        && isStringWithMax(data.ipAddress, 45)
+        && (!('macAddress' in data) || isStringWithMax(data.macAddress, 30))
+        && (data.status == 'online' || data.status == 'offline')
+        && isStringWithMax(data.groupName, 100)
+        && (data.connectionType == 'LAN' || data.connectionType == 'Standalone' || data.connectionType == 'Internet')
+        && (!('switchType' in data) || isStringWithMax(data.switchType, 100))
+        && (!('escanVerified' in data) || data.escanVerified is bool);
+    }
+
+    // Group validation
+    function isValidGroup(data) {
+      return (!('id' in data) || data.id is string)
+        && isStringWithMax(data.name, 100)
+        && (!('description' in data) || isStringWithMax(data.description, 500))
+        && (!('groupHeadName' in data) || isStringWithMax(data.groupHeadName, 150))
+        && (!('nodalOfficer' in data) || isStringWithMax(data.nodalOfficer, 150))
+        && (!('nodalContact' in data) || isStringWithMax(data.nodalContact, 150))
+        && (!('switchName' in data) || isStringWithMax(data.switchName, 150))
+        && (!('existingPorts' in data) || data.existingPorts is int)
+        && (!('connectedPorts' in data) || data.connectedPorts is int)
+        && (!('unconnectedPorts' in data) || data.unconnectedPorts is int)
+        && (!('lanCount' in data) || data.lanCount is int)
+        && (!('internetCount' in data) || data.internetCount is int)
+        && (!('standaloneCount' in data) || data.standaloneCount is int);
+    }
+
+    // Settings validation
+    function isValidSettings(data) {
+      return !('id' in data) || data.id is string;
+    }
+
+    // Alert validation
+    function isValidAlert(data) {
+      return data.id is string
+        && isStringWithMax(data.hostname, 100)
+        && isStringWithMax(data.type, 100)
+        && isStringWithMax(data.severity, 50);
+    }
+
+    // Rules for Devices
+    match /devices/{deviceId} {
+      allow read, list: if true;
+      allow create: if isValidId(deviceId) && isValidDevice(incoming());
+      allow update: if isValidId(deviceId) && isValidDevice(incoming());
+      allow delete: if true;
+    }
+
+    // Rules for Groups
+    match /groups/{groupId} {
+      allow read, list: if true;
+      allow create: if isValidId(groupId) && isValidGroup(incoming());
+      allow update: if isValidId(groupId) && isValidGroup(incoming());
+      allow delete: if true;
+    }
+
+    // Rules for Settings
+    match /settings/{settingsId} {
+      allow read, list: if true;
+      allow create: if isValidId(settingsId) && isValidSettings(incoming());
+      allow update: if isValidId(settingsId) && isValidSettings(incoming());
+      allow delete: if true;
+    }
+
+    // Rules for Alerts
+    match /alerts/{alertId} {
+      allow read, list: if true;
+      allow create: if isValidId(alertId) && isValidAlert(incoming());
+      allow update: if isValidId(alertId) && isValidAlert(incoming());
+      allow delete: if true;
+    }
+  }
+}

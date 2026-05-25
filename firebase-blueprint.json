@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "Device": {
+      "title": "Device",
+      "description": "Network connected device node managed by CSG",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "hostname": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "macAddress": { "type": "string" },
+        "os": { "type": "string" },
+        "processor": { "type": "string" },
+        "ram": { "type": "string" },
+        "storage": { "type": "string" },
+        "status": { "type": "string", "enum": ["online", "offline"] },
+        "groupName": { "type": "string" },
+        "username": { "type": "string" },
+        "lastActive": { "type": "string" },
+        "location": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "configUrl": { "type": "string" },
+        "notes": { "type": "string" },
+        "connectionType": { "type": "string", "enum": ["LAN", "Standalone", "Internet"] },
+        "isLocked": { "type": "boolean" }
+      },
+      "required": ["id", "hostname", "ipAddress", "macAddress", "status", "groupName", "connectionType"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Security Access Group within CSG network segments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "deviceCount": { "type": "integer" },
+        "groupHeadName": { "type": "string" },
+        "nodalOfficer": { "type": "string" },
+        "nodalContact": { "type": "string" },
+        "switchName": { "type": "string" },
+        "existingPorts": { "type": "integer" },
+        "connectedPorts": { "type": "integer" },
+        "unconnectedPorts": { "type": "integer" },
+        "lanCount": { "type": "integer" },
+        "internetCount": { "type": "integer" },
+        "standaloneCount": { "type": "integer" }
+      },
+      "required": ["id", "name", "description"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global CSG system governance options and credentials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "realtimeThreatNeutralization": { "type": "boolean" },
+        "macSpoofingPrevention": { "type": "boolean" },
+        "intrusionLoggingDepth": { "type": "string" },
+        "systemName": { "type": "string" },
+        "maintenanceMode": { "type": "boolean" },
+        "emailAlerts": { "type": "boolean" },
+        "telegramAlerts": { "type": "boolean" },
+        "alertSeverity": { "type": "string" },
+        "customDns": { "type": "string" },
+        "dhcpEnabled": { "type": "boolean" },
+        "autoBackup": { "type": "boolean" },
+        "backupInterval": { "type": "string" },
+        "apiToken": { "type": "string" }
+      },
+      "required": ["id"]
+    },
+    "Alert": {
+      "title": "Alert",
+      "description": "Critical network security logging records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "time": { "type": "string" },
+        "hostname": { "type": "string" },
+        "type": { "type": "string" },
+        "severity": { "type": "string" }
+      },
+      "required": ["id", "time", "hostname", "type", "severity"]
+    }
+  },
+  "firestore": {
+    "/devices/{deviceId}": {
+      "schema": "Device",
+      "description": "Individual client workstation records"
+    },
+    "/groups/{groupId}": {
+      "schema": "Group",
+      "description": "Logical network partition groups"
+    },
+    "/settings/{settingsId}": {
+      "schema": "Settings",
+      "description": "Central environment parameters and switches"
+    },
+    "/alerts/{alertId}": {
+      "schema": "Alert",
+      "description": "A stream of network alert signals"
+    }
+  }
+}
