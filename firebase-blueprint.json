@@ -44,7 +44,9 @@
         "unconnectedPorts": { "type": "integer" },
         "lanCount": { "type": "integer" },
         "internetCount": { "type": "integer" },
-        "standaloneCount": { "type": "integer" }
+        "standaloneCount": { "type": "integer" },
+        "lastCaseRaised": { "type": "string" },
+        "lastCaseComment": { "type": "string" }
       },
       "required": ["id", "name", "description"]
     },

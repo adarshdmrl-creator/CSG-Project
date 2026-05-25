@@ -331,6 +331,8 @@ export const groupService = {
           lanCount: data.lanCount || 0,
           internetCount: data.internetCount || 0,
           standaloneCount: data.standaloneCount || 0,
+          lastCaseRaised: data.lastCaseRaised || '',
+          lastCaseComment: data.lastCaseComment || '',
         } as Group;
       });
       
@@ -409,6 +411,8 @@ export const groupService = {
       if (updates.lanCount !== undefined) updateData.lanCount = Number(updates.lanCount ?? 0);
       if (updates.internetCount !== undefined) updateData.internetCount = Number(updates.internetCount ?? 0);
       if (updates.standaloneCount !== undefined) updateData.standaloneCount = Number(updates.standaloneCount ?? 0);
+      if (updates.lastCaseRaised !== undefined) updateData.lastCaseRaised = updates.lastCaseRaised;
+      if (updates.lastCaseComment !== undefined) updateData.lastCaseComment = updates.lastCaseComment;
 
       if (exists) {
         await updateDoc(groupRef, updateData);

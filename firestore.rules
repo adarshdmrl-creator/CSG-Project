@@ -51,7 +51,9 @@ service cloud.firestore {
         && (!('unconnectedPorts' in data) || data.unconnectedPorts is int)
         && (!('lanCount' in data) || data.lanCount is int)
         && (!('internetCount' in data) || data.internetCount is int)
-        && (!('standaloneCount' in data) || data.standaloneCount is int);
+        && (!('standaloneCount' in data) || data.standaloneCount is int)
+        && (!('lastCaseRaised' in data) || isStringWithMax(data.lastCaseRaised, 150))
+        && (!('lastCaseComment' in data) || isStringWithMax(data.lastCaseComment, 1000));
     }
 
     // Settings validation

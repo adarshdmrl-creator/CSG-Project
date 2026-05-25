@@ -41,6 +41,8 @@ export default function Devices() {
   const [editedInternetCount, setEditedInternetCount] = useState('');
   const [editedStandaloneCount, setEditedStandaloneCount] = useState('');
   const [editedTotalSystems, setEditedTotalSystems] = useState('');
+  const [editedLastCaseRaised, setEditedLastCaseRaised] = useState('');
+  const [editedLastCaseComment, setEditedLastCaseComment] = useState('');
   const [isSavingGroupMeta, setIsSavingGroupMeta] = useState(false);
 
   const activeGroupObj = groups.find(g => g.name.toLowerCase() === selectedGroup.toLowerCase()) || groups[0];
@@ -67,6 +69,8 @@ export default function Devices() {
     setEditedInternetCount(String(activeGroupObj.internetCount === undefined ? dynamicInternet : activeGroupObj.internetCount));
     setEditedStandaloneCount(String(activeGroupObj.standaloneCount === undefined ? dynamicStandalone : activeGroupObj.standaloneCount));
     setEditedTotalSystems(String(activeGroupObj.deviceCount === undefined ? dynamicTotal : activeGroupObj.deviceCount));
+    setEditedLastCaseRaised(activeGroupObj.lastCaseRaised || '');
+    setEditedLastCaseComment(activeGroupObj.lastCaseComment || '');
     setIsEditingGroupMeta(true);
   };
 
@@ -86,6 +90,8 @@ export default function Devices() {
         internetCount: Number(editedInternetCount) || 0,
         standaloneCount: Number(editedStandaloneCount) || 0,
         deviceCount: Number(editedTotalSystems) || 0,
+        lastCaseRaised: editedLastCaseRaised,
+        lastCaseComment: editedLastCaseComment,
       });
       toast.success("Group configuration synchronized securely.");
       setIsEditingGroupMeta(false);
@@ -241,7 +247,7 @@ export default function Devices() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white">System Inventory</h2>
-          <p className="text-gray-400 text-sm">Managing {devices.length} verified network systems.</p>
+          <p className="text-cyber-blue/80 text-sm font-semibold tracking-wider uppercase">Central Cyber Command Unit</p>
         </div>
         <div className="flex gap-3">
           <button 
@@ -323,51 +329,115 @@ export default function Devices() {
               {activeGroupObj.name}
             </h1>
 
-            {/* Subtext: Group Head Name & IT Nodal Officer Name & Contact in bold, good color */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs border-b border-cyber-border/40 pb-4">
-              <div>
-                <span className="text-cyber-blue font-extrabold tracking-wider bg-cyber-blue/5 border border-cyber-blue/20 px-2 py-0.5 rounded-sm">GROUP HEAD: </span>
-                {isEditingGroupMeta ? (
-                  <input
-                    type="text"
-                    required
-                    className="cyber-input py-0.5 px-2 text-xs text-white max-w-48 ml-1 bg-black/40 border-cyber-blue/30 inline-block"
-                    value={editedGroupHeadName}
-                    onChange={e => setEditedGroupHeadName(e.target.value)}
-                  />
-                ) : (
-                  <span className="text-white font-bold ml-1">{activeGroupObj.groupHeadName || "ADMIN-IN-CHARGE"}</span>
-                )}
+            {/* Subtext Grid: Group Head Name, IT Nodal Officer Name, Contact in bold, good color */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs border-b border-cyber-border/40 pb-6 pt-2 w-full max-w-5xl mx-auto">
+              {/* Card 1: Group Head */}
+              <div className="relative p-3 bg-cyber-card/60 border border-cyber-border hover:border-cyber-blue/40 rounded-sm text-left flex flex-col justify-between transition-all duration-300 group shadow-md select-none border-l-2 border-l-cyber-blue">
+                <div>
+                  <div className="text-[10px] text-cyber-blue font-extrabold tracking-wider uppercase mb-1 flex items-center gap-1.5 bg-cyber-blue/5 px-2 py-1 rounded-sm border border-cyber-blue/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-blue animate-pulse" />
+                    Group Head
+                  </div>
+                  <div className="px-1 py-1.5 min-h-[36px] flex items-center">
+                    {isEditingGroupMeta ? (
+                      <input
+                        type="text"
+                        required
+                        className="cyber-input py-1 px-2 text-xs text-white w-full bg-black/50 border-cyber-blue/30 focus:border-cyber-blue focus:ring-1 focus:ring-cyber-blue"
+                        value={editedGroupHeadName}
+                        onChange={e => setEditedGroupHeadName(e.target.value)}
+                      />
+                    ) : (
+                      <span className="text-white font-bold text-sm tracking-wide break-words">{activeGroupObj.groupHeadName || "ADMIN-IN-CHARGE"}</span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="hidden sm:inline text-cyber-border">|</div>
-              <div>
-                <span className="text-cyber-green font-extrabold tracking-wider bg-cyber-green/5 border border-cyber-green/20 px-2 py-0.5 rounded-sm">IT NODAL OFFICER: </span>
-                {isEditingGroupMeta ? (
-                  <input
-                    type="text"
-                    required
-                    className="cyber-input py-0.5 px-2 text-xs text-white max-w-44 ml-1 bg-black/40 border-cyber-green/30 inline-block"
-                    value={editedNodalOfficer}
-                    onChange={e => setEditedNodalOfficer(e.target.value)}
-                  />
-                ) : (
-                  <span className="text-white font-bold ml-1">{activeGroupObj.nodalOfficer || "SECURE-GATEKEEPER"}</span>
-                )}
+
+              {/* Card 2: IT Nodal Officer */}
+              <div className="relative p-3 bg-cyber-card/60 border border-cyber-border hover:border-cyber-green/40 rounded-sm text-left flex flex-col justify-between transition-all duration-300 group shadow-md select-none border-l-2 border-l-cyber-green">
+                <div>
+                  <div className="text-[10px] text-cyber-green font-extrabold tracking-wider uppercase mb-1 flex items-center gap-1.5 bg-cyber-green/5 px-2 py-1 rounded-sm border border-cyber-green/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-green animate-pulse" />
+                    IT Nodal Officer
+                  </div>
+                  <div className="px-1 py-1.5 min-h-[36px] flex items-center">
+                    {isEditingGroupMeta ? (
+                      <input
+                        type="text"
+                        required
+                        className="cyber-input py-1 px-2 text-xs text-white w-full bg-black/50 border-cyber-green/30 focus:border-cyber-green focus:ring-1 focus:ring-cyber-green"
+                        value={editedNodalOfficer}
+                        onChange={e => setEditedNodalOfficer(e.target.value)}
+                      />
+                    ) : (
+                      <span className="text-white font-bold text-sm tracking-wide break-words">{activeGroupObj.nodalOfficer || "SECURE-GATEKEEPER"}</span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="hidden sm:inline text-cyber-border">|</div>
-              <div>
-                <span className="text-cyber-yellow font-extrabold tracking-wider bg-cyber-yellow/5 border border-cyber-yellow/20 px-2 py-0.5 rounded-sm">CONTACT: </span>
-                {isEditingGroupMeta ? (
-                  <input
-                    type="text"
-                    required
-                    className="cyber-input py-0.5 px-2 text-xs text-white max-w-44 ml-1 bg-black/40 border-cyber-yellow/30 inline-block"
-                    value={editedNodalContact}
-                    onChange={e => setEditedNodalContact(e.target.value)}
-                  />
-                ) : (
-                  <span className="text-white font-bold ml-1">{activeGroupObj.nodalContact || "+91-XXXXXXXXXX"}</span>
-                )}
+
+              {/* Card 3: Contact Info */}
+              <div className="relative p-3 bg-cyber-card/60 border border-cyber-border hover:border-cyber-yellow/40 rounded-sm text-left flex flex-col justify-between transition-all duration-300 group shadow-md select-none border-l-2 border-l-cyber-yellow">
+                <div>
+                  <div className="text-[10px] text-cyber-yellow font-extrabold tracking-wider uppercase mb-1 flex items-center gap-1.5 bg-cyber-yellow/5 px-2 py-1 rounded-sm border border-cyber-yellow/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-yellow animate-pulse" />
+                    Contact Info
+                  </div>
+                  <div className="px-1 py-1.5 min-h-[36px] flex items-center">
+                    {isEditingGroupMeta ? (
+                      <input
+                        type="text"
+                        required
+                        className="cyber-input py-1 px-2 text-xs text-white w-full bg-black/50 border-cyber-yellow/30 focus:border-cyber-yellow focus:ring-1 focus:ring-cyber-yellow"
+                        value={editedNodalContact}
+                        onChange={e => setEditedNodalContact(e.target.value)}
+                      />
+                    ) : (
+                      <span className="text-white font-bold text-sm tracking-wide break-all">{activeGroupObj.nodalContact || "+91-XXXXXXXXXX"}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 4: Last Case Raised */}
+              <div className="relative p-3 bg-cyber-card/60 border border-cyber-border hover:border-cyber-red/40 rounded-sm text-left flex flex-col justify-between transition-all duration-300 group shadow-md select-none border-l-2 border-l-cyber-red">
+                <div>
+                  <div className="text-[10px] text-cyber-red font-extrabold tracking-wider uppercase mb-1 flex items-center gap-1.5 bg-cyber-red/5 px-2 py-1 rounded-sm border border-cyber-red/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-red animate-pulse" />
+                    Last Case Raised
+                  </div>
+                  <div className="px-1 py-1 min-h-[36px] flex items-center">
+                    {isEditingGroupMeta ? (
+                      <input
+                        type="text"
+                        className="cyber-input py-1 px-2 text-xs text-white w-full bg-black/50 border-cyber-red/30 focus:border-cyber-red focus:ring-1 focus:ring-cyber-red"
+                        placeholder="Case reference No."
+                        value={editedLastCaseRaised}
+                        onChange={e => setEditedLastCaseRaised(e.target.value)}
+                      />
+                    ) : (
+                      <span className="text-white font-bold text-sm tracking-wide truncate block" title={activeGroupObj.lastCaseRaised || "N/A"}>
+                        {activeGroupObj.lastCaseRaised || "N/A"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="px-1 mt-1 border-t border-cyber-border/40 pt-1.5">
+                    {isEditingGroupMeta ? (
+                      <input
+                        type="text"
+                        className="cyber-input py-0.5 px-2 text-[10px] text-gray-300 w-full bg-black/50 border-cyber-border focus:border-cyber-red/30 focus:ring-1 focus:ring-cyber-red placeholder:text-gray-600 inline-block"
+                        placeholder="Case comments/logs..."
+                        value={editedLastCaseComment}
+                        onChange={e => setEditedLastCaseComment(e.target.value)}
+                      />
+                    ) : (
+                      <div className="text-[11px] text-cyber-text-muted italic truncate w-full" title={activeGroupObj.lastCaseComment}>
+                        {activeGroupObj.lastCaseComment ? `Comment: ${activeGroupObj.lastCaseComment}` : "(No comment added)"}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

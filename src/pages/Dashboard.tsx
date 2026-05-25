@@ -71,7 +71,7 @@ export default function Dashboard() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tighter text-white uppercase glitch-text">CSG_Operations_Center</h2>
-          <p className="text-cyber-text-muted text-[10px] font-mono tracking-widest mt-1">SECURITY_PROTOCOL: ACTIVE // ENCRYPTION: HL-7/NET</p>
+          <p className="text-cyber-blue/80 text-xs font-semibold tracking-wider uppercase mt-1">Central Cyber Command Unit</p>
         </div>
         <div className="flex gap-4">
            <button 
@@ -108,10 +108,6 @@ export default function Dashboard() {
               <stat.icon size={18} className="text-white/40" />
             </div>
             <h3 className="text-3xl font-extrabold text-white tracking-tighter">{stat.value}</h3>
-            <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-               <span className="text-[10px] font-bold text-white/50 uppercase">Increased by {stat.trend.slice(1)}</span>
-               <TrendingUp size={14} className="text-cyber-green opacity-50" />
-            </div>
           </motion.div>
         ))}
       </div>

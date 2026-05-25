@@ -3,6 +3,118 @@ import { LayoutDashboard, Monitor, Layers, Bell, FileText, Settings, LogOut, Shi
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
+// Premium transparent animated vector cyber logo (perfectly fitting AI / Cyber security & computer department aesthetic)
+const AnimatedCyberLogo = () => {
+  return (
+    <div className="relative w-10 h-10 flex items-center justify-center overflow-visible select-none">
+      <svg className="w-10 h-10 filter drop-shadow-[0_0_8px_rgba(0,240,255,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Animated Cyber Shield Outer Perimeter */}
+        <motion.path
+          d="M 50 10 L 85 28 L 85 64 L 50 90 L 15 64 L 15 28 Z"
+          stroke="#00f0ff"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0, opacity: 0.1 }}
+          animate={{ 
+            pathLength: [0, 1, 1, 0],
+            stroke: ["#00f0ff", "#3b82f6", "#10b981", "#00f0ff"],
+            opacity: [0.3, 1, 0.8, 0.3]
+          }}
+          transition={{
+            duration: 4,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Dynamic Glowing Internal Orbit Grid */}
+        <motion.circle
+          cx="50"
+          cy="50"
+          r="18"
+          stroke="#38bdf8"
+          strokeWidth="2"
+          strokeDasharray="6, 12"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 8, ease: "linear", repeat: Infinity }}
+        />
+
+        {/* Outer security perimeter accent */}
+        <motion.path
+          d="M 50 13 L 81 30 L 81 61 L 50 86 L 19 61 L 19 30 Z"
+          stroke="#10b981"
+          strokeWidth="1"
+          strokeDasharray="3, 3"
+          opacity="0.4"
+        />
+
+        {/* Radial AI Laser Core / Processor node */}
+        <motion.circle
+          cx="50"
+          cy="50"
+          r="7"
+          fill="#00f0ff"
+          animate={{
+            scale: [0.85, 1.25, 0.85],
+            opacity: [0.7, 1, 0.7],
+            fill: ["#00f0ff", "#10b981", "#6366f1", "#00f0ff"]
+          }}
+          transition={{
+            duration: 2.5,
+            ease: "easeInOut",
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Expanding threat-defense sonar pulses */}
+        <motion.circle
+          cx="50"
+          cy="50"
+          r="26"
+          stroke="#00f0ff"
+          strokeWidth="1.5"
+          initial={{ scale: 0.65, opacity: 0.7 }}
+          animate={{
+            scale: [0.65, 1.35],
+            opacity: [0.7, 0],
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeOut",
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Computing & Motherboard connection branches */}
+        <path
+          d="M 50 10 L 50 22 M 85 28 L 73 35 M 85 64 L 73 57 M 50 90 L 50 78 M 15 64 L 27 57 M 15 28 L 27 35"
+          stroke="#38bdf8"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.65"
+        />
+
+        {/* Spark defense node firing around circuit paths */}
+        <motion.circle
+          cx="50"
+          cy="10"
+          r="2.5"
+          fill="#ffffff"
+          animate={{
+            scale: [1, 1.8, 1],
+            opacity: [0.7, 1, 0.7]
+          }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity
+          }}
+        />
+      </svg>
+    </div>
+  );
+};
+
 interface LayoutProps {
   user: any;
   onLogout: () => void;
@@ -26,11 +138,11 @@ export default function Layout({ user, onLogout }: LayoutProps) {
       
       {/* Sidebar */}
       <aside className="w-[220px] bg-cyber-card border-r border-cyber-border flex flex-col z-20">
-        <div className="p-6 flex items-center gap-3">
-          <div className="w-6 h-6 bg-cyber-blue shadow-[0_0_10px_rgba(56,189,248,0.4)]" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }} />
+        <div className="p-4 border-b border-cyber-border/30 bg-black/10 flex items-center gap-3 select-none">
+          <AnimatedCyberLogo />
           <div>
-            <h1 className="font-extrabold text-sm tracking-tighter leading-none text-white">CSG NETWORK</h1>
-            <p className="text-[9px] text-cyber-blue font-bold tracking-tight uppercase opacity-80">Central Defense v2.4</p>
+            <h1 className="font-extrabold text-[13px] tracking-tight leading-none text-white">CSG NETWORK</h1>
+            <p className="text-[9px] text-cyber-blue font-bold tracking-tight uppercase mt-1 opacity-80">Central Defense v2.4</p>
           </div>
         </div>
 
@@ -72,10 +184,7 @@ export default function Layout({ user, onLogout }: LayoutProps) {
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Top Navbar */}
         <header className="h-[60px] border-b border-cyber-border bg-cyber-card/80 backdrop-blur-md flex items-center justify-between px-6 z-10">
-          <div className="flex gap-8 items-center text-[11px] font-mono">
-            <div className="text-cyber-text-muted">SYSTEM_STATUS: <span className="text-cyber-green">ENCRYPTED_UP</span></div>
-            <div className="text-cyber-text-muted">UPTIME: <span className="text-white">241:12:08:54</span></div>
-          </div>
+          <div />
 
           <div className="flex items-center gap-4">
             <button 

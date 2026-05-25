@@ -42,6 +42,8 @@ export interface Group {
   lanCount?: number;
   internetCount?: number;
   standaloneCount?: number;
+  lastCaseRaised?: string;
+  lastCaseComment?: string;
 }
 
 export interface Alert {
