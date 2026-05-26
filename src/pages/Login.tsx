@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShieldAlert, Lock, User, Terminal } from 'lucide-react';
 import { authService } from '../services/api';
@@ -9,9 +10,10 @@ interface LoginProps {
 }
 
 export default function Login({ onLogin }: LoginProps) {
-  const [email, setEmail] = useState('admin@csg.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('admin@csg');
+  const [password, setPassword] = useState('Dmrl@csg');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +22,7 @@ export default function Login({ onLogin }: LoginProps) {
       const user = await authService.login(email, password);
       onLogin(user);
       toast.success('Authentication successful. Session initialized.');
+      navigate('/');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Authentication failure.');
     } finally {
@@ -62,11 +65,11 @@ export default function Login({ onLogin }: LoginProps) {
               <div className="relative">
                 <User size={18} className="absolute left-3 top-2.5 text-cyber-blue/50" />
                 <input 
-                  type="email" 
+                  type="text" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="cyber-input w-full pl-10"
-                  placeholder="admin@csg.com"
+                  placeholder="admin@csg"
                   required
                 />
               </div>
@@ -97,16 +100,12 @@ export default function Login({ onLogin }: LoginProps) {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-cyber-border text-center">
-            <p className="text-[10px] font-mono text-gray-600 uppercase tracking-tighter">
-              BETA V4.1 // DEPLOYMENT: ASIA-SOUTH-1
-            </p>
-          </div>
+
         </div>
 
         <div className="mt-4 flex justify-between px-2 text-[10px] font-mono text-cyber-blue opacity-50 uppercase tracking-wider">
-          <span>SEC_STAT: ENCRYPTED</span>
-          <span>PROTOCOL: HL-7/NET</span>
+          <span>Designed by Pradeep | Ramyasri | Sirisha</span>
+          <span>CSG Interns'26</span>
         </div>
       </motion.div>
     </div>

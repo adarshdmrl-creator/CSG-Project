@@ -187,20 +187,6 @@ export default function Layout({ user, onLogout }: LayoutProps) {
           <div />
 
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => window.dispatchEvent(new CustomEvent('open-add-device-modal'))}
-              className="px-3 py-1.5 bg-cyber-blue text-black text-[11px] font-bold uppercase tracking-widest rounded-sm hover:bg-cyber-blue/80 transition-all shadow-[0_0_10px_rgba(56,189,248,0.3)]"
-            >
-              + Add Device
-            </button>
-            <div className="bg-cyber-bg border border-cyber-border rounded-sm px-3 py-1.5 flex items-center gap-2 group focus-within:border-cyber-blue/40 transition-all">
-              <Search size={14} className="text-cyber-text-muted" />
-              <input 
-                type="text" 
-                placeholder="Search Cluster [CMD+K]" 
-                className="bg-transparent border-none outline-none text-[12px] text-white w-48"
-              />
-            </div>
             <div className="w-8 h-8 rounded-full bg-cyber-border border border-cyber-blue/20 flex items-center justify-center overflow-hidden">
                <User size={16} className="text-cyber-blue" />
             </div>

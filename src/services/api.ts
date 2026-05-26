@@ -123,6 +123,9 @@ async function ensureSeeded() {
 // Ensure the seeding check runs on initialization
 ensureSeeded().catch(err => console.error("Initialize seed failed:", err));
 
+// Clear auth session on initial script load/refresh
+localStorage.removeItem('user');
+
 export const authService = {
   login: async (email: string, password: string) => {
     const { data } = await api.post('/auth/login', { email, password });

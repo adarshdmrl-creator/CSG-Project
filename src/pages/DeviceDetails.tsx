@@ -313,7 +313,7 @@ export default function DeviceDetails() {
                 </h4>
                 <div className="space-y-3 h-52 overflow-y-auto pr-2 custom-scrollbar">
                   {[
-                    { time: '10:42:01', event: device.isLocked ? 'Hardware Isolated' : 'Authentication Success', user: 'admin@csg.com', status: device.isLocked ? 'error' : 'success' },
+                    { time: '10:42:01', event: device.isLocked ? 'Hardware Isolated' : 'Authentication Success', user: 'admin@csg', status: device.isLocked ? 'error' : 'success' },
                     { time: '09:12:45', event: 'Config File Uploaded', user: 'system', status: 'info' },
                     { time: '08:55:12', event: 'Remote Session Initiated', user: 'user_x', status: 'warning' },
                     { time: '07:20:33', event: 'System Boot Sequence', user: 'os_kernel', status: 'info' },

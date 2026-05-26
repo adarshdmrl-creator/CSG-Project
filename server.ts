@@ -51,6 +51,11 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Health check routes
+  app.get(["/health", "/healthz", "/api/health"], (req, res) => {
+    res.status(200).json({ status: "ok", uptime: process.uptime() });
+  });
+
   // Auth Middleware (Simulation)
   const authMiddleware = (req, res, next) => {
     // In a real app, we'd check headers/cookies. For this demo, we assume authenticated.
@@ -60,8 +65,8 @@ async function startServer() {
   // API Routes
   app.post("/api/auth/login", (req, res) => {
     const { email, password } = req.body;
-    if (email === "admin@csg.com" && password === "admin123") {
-      res.json({ uid: "admin-uid", email: "admin@csg.com", role: "admin" });
+    if (email === "admin@csg" && password === "Dmrl@csg") {
+      res.json({ uid: "admin-uid", email: "admin@csg", role: "admin" });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
@@ -129,7 +134,7 @@ async function startServer() {
   });
 
   // Vite integration
-  const isProduction = process.env.NODE_ENV === "production" || process.env.VITE_PROD === "true";
+  const isProduction = process.env.NODE_ENV !== "development";
 
   if (!isProduction) {
     try {
@@ -144,22 +149,27 @@ async function startServer() {
       console.error("Failed to load Vite middleware:", err);
     }
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    if (fs.existsSync(distPath)) {
+    let distPath = path.join(process.cwd(), 'dist');
+    if (!fs.existsSync(path.join(distPath, 'index.html'))) {
+      try {
+        const { fileURLToPath } = await import('url');
+        distPath = path.dirname(fileURLToPath(import.meta.url));
+      } catch (err) {
+        distPath = path.resolve('./dist');
+      }
+    }
+    
+    if (fs.existsSync(distPath) && fs.existsSync(path.join(distPath, 'index.html'))) {
       app.use(express.static(distPath));
       app.get('*', (req, res) => {
         const indexPath = path.join(distPath, 'index.html');
-        if (fs.existsSync(indexPath)) {
-          res.sendFile(indexPath);
-        } else {
-          res.status(404).send("Production build not found (index.html missing)");
-        }
+        res.sendFile(indexPath);
       });
       console.log("Serving static files from:", distPath);
     } else {
-      console.error("Dist directory not found at:", distPath);
+      console.error("Dist directory or index.html not found at:", distPath);
       app.get('*', (req, res) => {
-        res.status(500).send("Production build directory missing");
+        res.status(500).send(`Production build directory missing or index.html missing at ${distPath}`);
       });
     }
   }

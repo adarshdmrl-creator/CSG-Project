@@ -13,6 +13,7 @@ import { deviceService, groupService } from '../services/api';
 import { DashboardStats, Group } from '../types';
 import { cn } from '../lib/utils';
 import NetworkTopology from '../components/NetworkTopology';
+import DMRLNetworkMap from '../components/DMRLNetworkMap';
 import AddDeviceModal from '../components/AddDeviceModal';
 
 const COLORS = ['#38bdf8', '#4ade80', '#f43f5e', '#f59e0b', '#A855F7'];
@@ -112,37 +113,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Network Topology Map */}
-        <NetworkTopology groups={groups} />
-
-        {/* Activity Statistics bar chart from images */}
-        <div className="cyber-panel flex flex-col h-[500px]">
-           <div className="cyber-panel-header">
-              <span>SCAN_STATISTICS</span>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-cyber-blue" />
-                  <span className="text-[8px]">SCANS</span>
-                </div>
-              </div>
-           </div>
-           <div className="flex-1 p-6">
-             <ResponsiveContainer width="100%" height="100%">
-               <BarChart data={activityData}>
-                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
-                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
-                 <Tooltip 
-                   cursor={{ fill: 'rgba(255,255,255,0.02)' }}
-                   contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '4px' }}
-                 />
-                 <Bar dataKey="scans" fill="#38bdf8" radius={[2, 2, 0, 0]} barSize={16} />
-               </BarChart>
-             </ResponsiveContainer>
-           </div>
-        </div>
-      </div>
+      {/* DMRL Animated Illustrative Network Map */}
+      <DMRLNetworkMap />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* System Connection Matrix Donut */}
@@ -190,46 +162,9 @@ export default function Dashboard() {
            </div>
         </div>
 
-        {/* Real-time Data Grid */}
-        <div className="cyber-panel lg:col-span-2 flex flex-col">
-          <div className="cyber-panel-header">
-            <span>REAL-TIME_DATA_STREAM</span>
-            <div className="flex items-center gap-2">
-               <div className="w-2 h-2 rounded-full bg-cyber-green animate-pulse" />
-               <span className="text-cyber-green">LIVE</span>
-            </div>
-          </div>
-          <div className="flex-1 overflow-hidden">
-             <div className="grid grid-cols-4 px-6 py-3 bg-white/5 text-[9px] font-bold text-cyber-text-muted uppercase tracking-widest border-b border-cyber-border">
-                <div>SYSTEM_NODE</div>
-                <div>ADDRESS</div>
-                <div>VECTOR_ACTIVITY</div>
-                <div className="text-right">STATUS</div>
-             </div>
-             <div className="divide-y divide-cyber-border/30">
-                {[
-                  { host: 'CSG-SRV-04', ip: '192.168.1.12', activity: 'CPU_HIGH_LOAD [88%]', status: 'SECURE' },
-                  { host: 'CSG-WK-24', ip: '10.0.4.112', activity: 'ENCRYPTED_TUNNEL_OPEN', status: 'SECURE' },
-                  { host: 'CSG-IOT-09', ip: '172.16.8.21', activity: 'HEARTBEAT_ACK_TIMEOUT', status: 'CAUTION' },
-                  { host: 'CSG-NAS-02', ip: '10.0.8.45', activity: 'VOLUME_MIRROR_SYNC', status: 'SECURE' },
-                  { host: 'CSG-DB-CORE', ip: '192.168.2.1', activity: 'SQL_CLEANUP_DAEMON', status: 'SECURE' },
-                ].map((row, i) => (
-                  <div key={i} className="grid grid-cols-4 px-6 py-4 text-[12px] hover:bg-white/2 transition-colors items-center">
-                    <div className="font-bold text-white">{row.host}</div>
-                    <div className="font-mono text-cyber-text-muted text-[10px]">{row.ip}</div>
-                    <div className="text-cyber-text-muted text-[11px] italic">{row.activity}</div>
-                    <div className="text-right">
-                       <span className={cn(
-                         "px-2 py-0.5 rounded-sm text-[9px] font-bold border uppercase",
-                         row.status === 'SECURE' ? "tag-online" : "bg-cyber-yellow/10 text-cyber-yellow border-cyber-yellow/20"
-                       )}>
-                         {row.status}
-                       </span>
-                    </div>
-                  </div>
-                ))}
-             </div>
-          </div>
+        {/* Network Topology Map (moved to replace Real-time Data Stream beside the system connection matrix) */}
+        <div className="lg:col-span-2 flex flex-col">
+          <NetworkTopology groups={groups} />
         </div>
       </div>
 
