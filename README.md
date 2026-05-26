@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="[https://ai.google.dev/static/site-assets/images/share-ais-513315318.png](https://aistudio.google.com/apps/769acdf6-40cb-4f47-bf14-f9179bc3cd53?project=gen-lang-client-0619221695&showPreview=true&showAssistant=true&fullscreenApplet=true)" />
+<img width="1200" height="475" alt="GHBanner" src="C:\Users\CSG\Pictures\Screenshots\Screenshot 2026-05-27 003128.png" />
 </div>
 
 ## Run Locally
