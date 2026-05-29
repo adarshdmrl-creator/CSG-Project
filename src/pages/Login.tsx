@@ -10,10 +10,22 @@ interface LoginProps {
 }
 
 export default function Login({ onLogin }: LoginProps) {
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'viewer'>('admin');
   const [email, setEmail] = useState('admin@csg');
   const [password, setPassword] = useState('Dmrl@csg');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleRoleSelect = (role: 'admin' | 'viewer') => {
+    setSelectedRole(role);
+    if (role === 'admin') {
+      setEmail('admin@csg');
+      setPassword('Dmrl@csg');
+    } else {
+      setEmail('viewer@csg');
+      setPassword('Dmrl@2026');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +33,7 @@ export default function Login({ onLogin }: LoginProps) {
     try {
       const user = await authService.login(email, password);
       onLogin(user);
-      toast.success('Authentication successful. Session initialized.');
+      toast.success(`Welcome back. Authenticated as ${user.role?.toUpperCase() || 'user'}.`);
       navigate('/');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Authentication failure.');
@@ -51,12 +63,44 @@ export default function Login({ onLogin }: LoginProps) {
         className="w-full max-w-md z-10"
       >
         <div className="cyber-panel p-8 backdrop-blur-xl bg-cyber-card/80 border-t-2 border-t-cyber-blue">
-          <div className="flex flex-col items-center mb-8">
+          <div className="flex flex-col items-center mb-6">
             <div className="w-16 h-16 bg-cyber-blue rounded-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,209,255,0.4)] mb-4">
               <ShieldAlert size={36} className="text-black" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight glitch-text">CSG DEFENSE LOGIN</h1>
             <p className="text-xs text-cyber-blue font-mono font-bold tracking-widest uppercase mt-2 opacity-70">Unauthorized access prohibited</p>
+          </div>
+
+          {/* User Type Selector */}
+          <div className="space-y-2 mb-6">
+            <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest ml-1">Select Access Mode</label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('admin')}
+                className={`py-3 px-4 rounded border flex flex-col items-center gap-1.5 transition-all duration-300 pointer-events-auto ${
+                  selectedRole === 'admin'
+                    ? 'border-cyber-blue bg-cyber-blue/10 text-white shadow-[0_0_12px_rgba(0,209,255,0.15)]'
+                    : 'border-cyber-border bg-black/40 text-cyber-text-muted hover:text-white hover:border-cyber-blue/30'
+                }`}
+              >
+                <ShieldAlert size={18} className={selectedRole === 'admin' ? 'text-cyber-blue' : 'text-cyber-text-muted'} />
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider">Admin</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('viewer')}
+                className={`py-3 px-4 rounded border flex flex-col items-center gap-1.5 transition-all duration-300 pointer-events-auto ${
+                  selectedRole === 'viewer'
+                    ? 'border-amber-500 bg-amber-500/10 text-white shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+                    : 'border-cyber-border bg-black/40 text-cyber-text-muted hover:text-white hover:border-amber-500/30'
+                }`}
+              >
+                <User size={18} className={selectedRole === 'viewer' ? 'text-amber-500' : 'text-cyber-text-muted'} />
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider">Viewer</span>
+              </button>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -68,7 +112,7 @@ export default function Login({ onLogin }: LoginProps) {
                   type="text" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="cyber-input w-full pl-10"
+                  className="cyber-input w-full pl-10 bg-black/40"
                   placeholder="admin@csg"
                   required
                 />
@@ -83,7 +127,7 @@ export default function Login({ onLogin }: LoginProps) {
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="cyber-input w-full pl-10"
+                  className="cyber-input w-full pl-10 bg-black/40"
                   placeholder="••••••••"
                   required
                 />
@@ -99,7 +143,6 @@ export default function Login({ onLogin }: LoginProps) {
               {loading ? 'INITIATING...' : 'ESTABLISH SESSION'}
             </button>
           </form>
-
 
         </div>
 

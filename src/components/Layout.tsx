@@ -123,7 +123,7 @@ interface LayoutProps {
 export default function Layout({ user, onLogout }: LayoutProps) {
   const location = useLocation();
 
-  const navItems = [
+  const allNavItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Devices', path: '/devices', icon: Monitor },
     { name: 'Groups', path: '/groups', icon: Layers },
@@ -131,6 +131,11 @@ export default function Layout({ user, onLogout }: LayoutProps) {
     { name: 'Reports', path: '/reports', icon: FileText },
     { name: 'Settings', path: '/settings', icon: Settings },
   ] as any[];
+
+  const isViewer = user?.role === 'viewer';
+  const navItems = isViewer
+    ? allNavItems.filter(item => item.name === 'Dashboard' || item.name === 'Reports')
+    : allNavItems;
 
   return (
     <div className="flex h-screen bg-cyber-bg overflow-hidden relative">
@@ -143,6 +148,16 @@ export default function Layout({ user, onLogout }: LayoutProps) {
           <div>
             <h1 className="font-extrabold text-[13px] tracking-tight leading-none text-white">CSG NETWORK</h1>
             <p className="text-[9px] text-cyber-blue font-bold tracking-tight uppercase mt-1 opacity-80">Central Defense v2.4</p>
+            <div className="mt-1.5 flex">
+              <span className={cn(
+                "text-[8px] font-mono px-1.5 py-0.5 rounded-[2px] font-bold tracking-wider border leading-none uppercase",
+                isViewer 
+                  ? "text-amber-500 border-amber-500/30 bg-amber-500/10 shadow-[0_0_8px_rgba(245,158,11,0.1)]" 
+                  : "text-cyber-green border-cyber-green/30 bg-cyber-green/10 shadow-[0_0_8px_rgba(34,197,94,0.1)]"
+              )}>
+                {isViewer ? "Viewer Mode" : "Admin Mode"}
+              </span>
+            </div>
           </div>
         </div>
 

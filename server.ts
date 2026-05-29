@@ -67,6 +67,8 @@ async function startServer() {
     const { email, password } = req.body;
     if (email === "admin@csg" && password === "Dmrl@csg") {
       res.json({ uid: "admin-uid", email: "admin@csg", role: "admin" });
+    } else if (email === "viewer@csg" && password === "Dmrl@2026") {
+      res.json({ uid: "viewer-uid", email: "viewer@csg", role: "viewer" });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
@@ -138,7 +140,8 @@ async function startServer() {
 
   if (!isProduction) {
     try {
-      const { createServer: createViteServer } = await import("vite");
+      const vitePkg = "vite";
+      const { createServer: createViteServer } = await import(vitePkg);
       const vite = await createViteServer({
         server: { middlewareMode: true },
         appType: "spa",
@@ -149,15 +152,7 @@ async function startServer() {
       console.error("Failed to load Vite middleware:", err);
     }
   } else {
-    let distPath = path.join(process.cwd(), 'dist');
-    if (!fs.existsSync(path.join(distPath, 'index.html'))) {
-      try {
-        const { fileURLToPath } = await import('url');
-        distPath = path.dirname(fileURLToPath(import.meta.url));
-      } catch (err) {
-        distPath = path.resolve('./dist');
-      }
-    }
+    const distPath = path.join(process.cwd(), 'dist');
     
     if (fs.existsSync(distPath) && fs.existsSync(path.join(distPath, 'index.html'))) {
       app.use(express.static(distPath));

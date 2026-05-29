@@ -74,14 +74,6 @@ export default function Dashboard() {
           <h2 className="text-3xl font-bold tracking-tighter text-white uppercase glitch-text">CSG_Operations_Center</h2>
           <p className="text-cyber-blue/80 text-xs font-semibold tracking-wider uppercase mt-1">Central Cyber Command Unit</p>
         </div>
-        <div className="flex gap-4">
-           <button 
-             onClick={() => setIsAddModalOpen(true)}
-             className="cyber-button-primary"
-           >
-             <span className="text-xl">+</span> Add Device
-           </button>
-        </div>
       </div>
 
       {/* Stats Grid - Gradient Cards from Image 3 */}

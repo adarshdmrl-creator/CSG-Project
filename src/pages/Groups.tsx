@@ -685,7 +685,7 @@ export default function Groups() {
                         )}
                       </td>
                       <td className="px-4 py-3 bg-white/5 font-bold text-cyber-text-muted border-r border-cyber-border/40">
-                        Network Switch Name/No.
+                        Network Switch IP
                       </td>
                       <td className="px-4 py-3 text-center font-bold text-cyber-blue">
                         {isEditingGroupMeta ? (
@@ -784,7 +784,7 @@ export default function Groups() {
                         )}
                       </td>
                       <td className="px-4 py-3 bg-white/5 font-bold text-cyber-text-muted border-r border-cyber-border/40">
-                        No. of Unconnected Ports
+                        No. of Isolated Ports
                       </td>
                       <td className="px-4 py-3 text-center font-bold text-cyber-red">
                         {isEditingGroupMeta ? (

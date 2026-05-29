@@ -23,6 +23,7 @@ export default function Devices() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDeviceIds, setSelectedDeviceIds] = useState<string[]>([]);
   const [isDeletingBulk, setIsDeletingBulk] = useState(false);
+  const [showDecommissionConfirm, setShowDecommissionConfirm] = useState(false);
 
   const [isEditingTable, setIsEditingTable] = useState(false);
   const [editedDevices, setEditedDevices] = useState<Record<string, Device>>({});
@@ -108,6 +109,12 @@ export default function Devices() {
     return () => window.removeEventListener('open-add-device-modal', handleOpenModal);
   }, []);
 
+  useEffect(() => {
+    if (selectedDeviceIds.length === 0) {
+      setShowDecommissionConfirm(false);
+    }
+  }, [selectedDeviceIds]);
+
   const filteredDevices = devices.filter(d => {
     const matchesSearch = 
       d.hostname.toLowerCase().includes(search.toLowerCase()) ||
@@ -148,22 +155,21 @@ export default function Devices() {
     }
   };
 
-  const handleBulkDeleteDevices = async () => {
+  const executeBulkDeleteDevices = async () => {
     const totalCount = selectedDeviceIds.length;
-    if (confirm(`CRITICAL WARNING: You are about to permanently decommission ${totalCount} system nodes. This cannot be undone. Confirm network deletion?`)) {
-      setIsDeletingBulk(true);
-      try {
-        for (const id of selectedDeviceIds) {
-          await deviceService.deleteDevice(id);
-        }
-        toast.success(`Successfully decommissioned ${totalCount} systems.`);
-        setSelectedDeviceIds([]);
-        fetchData();
-      } catch (err) {
-        toast.error('An error occurred during bulk decommissioning.');
-      } finally {
-        setIsDeletingBulk(false);
+    setIsDeletingBulk(true);
+    try {
+      for (const id of selectedDeviceIds) {
+        await deviceService.deleteDevice(id);
       }
+      toast.success(`Successfully decommissioned ${totalCount} systems.`);
+      setSelectedDeviceIds([]);
+      setShowDecommissionConfirm(false);
+      fetchData();
+    } catch (err) {
+      toast.error('An error occurred during bulk decommissioning.');
+    } finally {
+      setIsDeletingBulk(false);
     }
   };
 
@@ -236,20 +242,47 @@ export default function Devices() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setSelectedDeviceIds([])}
-                className="px-3 py-1 text-[10px] hover:text-white text-gray-400 uppercase font-bold border border-transparent hover:border-gray-700 transition-all font-mono"
-              >
-                Clear
-              </button>
-              <button
-                disabled={isDeletingBulk}
-                onClick={handleBulkDeleteDevices}
-                className="px-4 py-1.5 bg-red-800 hover:bg-red-700 border border-red-500/30 text-white font-bold text-xs uppercase rounded-sm transition-all font-mono"
-              >
-                {isDeletingBulk ? 'DELETING...' : 'DECOMMISSION SELECTED'}
-              </button>
+              {showDecommissionConfirm ? (
+                <>
+                  <span className="text-[9px] text-red-400 font-bold font-mono uppercase tracking-wider animate-pulse mr-2">
+                    CONFIRM PERMANENT PURGE?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowDecommissionConfirm(false)}
+                    className="px-3 py-1.5 text-[10px] bg-slate-900 border border-slate-700 hover:text-white text-gray-300 uppercase font-bold rounded-sm transition-all font-mono"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={isDeletingBulk}
+                    onClick={executeBulkDeleteDevices}
+                    className="px-4 py-1.5 bg-red-650 hover:bg-red-500 border border-red-500 text-white font-bold text-xs uppercase rounded-sm transition-all font-mono"
+                  >
+                    {isDeletingBulk ? 'DELETING...' : 'YES, PERMANENTLY DELETE'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDeviceIds([]);
+                      setShowDecommissionConfirm(false);
+                    }}
+                    className="px-3 py-1 text-[10px] hover:text-white text-gray-400 uppercase font-bold border border-transparent hover:border-gray-700 transition-all font-mono"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    disabled={isDeletingBulk}
+                    onClick={() => setShowDecommissionConfirm(true)}
+                    className="px-4 py-1.5 bg-red-800 hover:bg-red-700 border border-red-500/30 text-white font-bold text-xs uppercase rounded-sm transition-all font-mono"
+                  >
+                    DECOMMISSION SELECTED
+                  </button>
+                </>
+              )}
             </div>
           </motion.div>
         )}
@@ -352,9 +385,9 @@ export default function Devices() {
                 <th className="px-4 py-4 min-w-[140px]">Node Identity</th>
                 <th className="px-4 py-4 min-w-[120px]">Network Vector</th>
                 <th className="px-4 py-4 min-w-[150px]">MAC Address</th>
-                <th className="px-4 py-4 min-w-[140px]">Switch Type</th>
+                <th className="px-4 py-4 min-w-[140px]">Port number</th>
                 <th className="px-4 py-4 min-w-[110px]">Connection</th>
-                <th className="px-4 py-4 min-w-[125px]">Platform</th>
+                <th className="px-4 py-4 min-w-[125px]">OS Type</th>
                 <th className="px-4 py-4 min-w-[110px]">Access Group</th>
                 <th className="px-4 py-4 min-w-[90px]">Status</th>
                 <th className="px-4 py-4 min-w-[120px] text-center">E-Scan Verified</th>
@@ -448,12 +481,12 @@ export default function Devices() {
                       )}
                     </td>
 
-                    {/* Switch Type */}
+                    {/* Port number */}
                     <td className="px-4 py-4 text-cyber-text-muted">
                       {isEditingTable ? (
                         <input 
                           type="text"
-                          placeholder="Switch Type"
+                          placeholder="Port number"
                           className="cyber-input w-full py-1 px-2 text-xs text-white"
                           value={currentNode.switchType || ''}
                           onChange={e => handleFieldChange(device.id, 'switchType', e.target.value)}
@@ -487,12 +520,12 @@ export default function Devices() {
                       )}
                     </td>
 
-                    {/* Platform */}
+                    {/* OS Type */}
                     <td className="px-4 py-4 text-cyber-text-muted">
                       {isEditingTable ? (
                         <input 
                           type="text"
-                          placeholder="Platform OS"
+                          placeholder="OS Type"
                           className="cyber-input w-full py-1 px-2 text-xs text-white"
                           value={currentNode.os}
                           onChange={e => handleFieldChange(device.id, 'os', e.target.value)}

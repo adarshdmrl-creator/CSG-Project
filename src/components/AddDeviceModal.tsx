@@ -213,10 +213,10 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-cyber-text-muted uppercase tracking-widest">Switch Type</label>
+                <label className="text-[10px] font-bold text-cyber-text-muted uppercase tracking-widest">Port number</label>
                 <input 
                   className="cyber-input w-full"
-                  placeholder="Cisco, Juniper, etc."
+                  placeholder="Port number (e.g. Port 24)"
                   value={formData.switchType}
                   onChange={e => setFormData({...formData, switchType: e.target.value})}
                 />

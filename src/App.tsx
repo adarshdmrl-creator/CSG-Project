@@ -16,8 +16,11 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
   const [user, setUser] = useState(authService.getCurrentUser());
 
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: string[] }) => {
     if (!user) return <Navigate to="/login" replace />;
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+      return <Navigate to="/" replace />;
+    }
     return <>{children}</>;
   };
 
@@ -27,12 +30,12 @@ export default function App() {
         <Route path="/login" element={<Login onLogin={(u) => setUser(u)} />} />
         <Route path="/" element={<ProtectedRoute><Layout user={user} onLogout={() => { authService.logout(); setUser(null); }} /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
-          <Route path="devices" element={<Devices />} />
-          <Route path="devices/:id" element={<DeviceDetails />} />
-          <Route path="groups" element={<Groups />} />
-          <Route path="analytics" element={<Analytics />} />
+          <Route path="devices" element={<ProtectedRoute allowedRoles={['admin']}><Devices /></ProtectedRoute>} />
+          <Route path="devices/:id" element={<ProtectedRoute allowedRoles={['admin']}><DeviceDetails /></ProtectedRoute>} />
+          <Route path="groups" element={<ProtectedRoute allowedRoles={['admin']}><Groups /></ProtectedRoute>} />
+          <Route path="analytics" element={<ProtectedRoute allowedRoles={['admin']}><Analytics /></ProtectedRoute>} />
           <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="settings" element={<ProtectedRoute allowedRoles={['admin']}><Settings /></ProtectedRoute>} />
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" theme="dark" />
